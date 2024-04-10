@@ -3,3 +3,8 @@ appVersion: "1.0"
 description: Deploys pintrest's snappass
 name: snappass
 version: 0.1.0
+dependencies:
+- name: redis
+  version: 19.1.0
+  repository: "https://charts.bitnami.com/bitnami"
+  
