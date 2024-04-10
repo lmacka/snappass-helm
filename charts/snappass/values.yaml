@@ -32,7 +32,7 @@ ingress:
 
 environment:
   - name: REDIS_HOST
-    value: "redis-master"
+    value: "snappass-redis-master"
   - name: NO_SSL
     value: "True"
 
