@@ -24,17 +24,24 @@ ingress:
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: snappass.stobias.dev
+    - host: snappass.localhost.dev
   tls:
   - secretName: snappass-tls
     hosts:
-      - snappass.stobias.dev
+      - snappass.localhost.dev
 
 environment:
-  - name: REDIS_HOST
-    value: "snappass-redis-master"
   - name: NO_SSL
     value: "True"
+  - name: REDIS_USER
+    value: default
+  - name: REDIS_PASS
+    valueFrom:
+      secretKeyRef:
+        name: snappass-redis
+        key: redis-password
+  - name: REDIS_URL
+    value: "redis://default:$(REDIS_PASS)@snappass-redis-master:6379/0"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -56,20 +63,14 @@ affinity: {}
 
 redis:
   enabled: true
-
-    ## @param architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
-  ##
   architecture: standalone
-  ## Redis&reg; Authentication parameters
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
-  ##
   auth:
     ## @param auth.enabled Enable password authentication
     ##
-    enabled: false
+    enabled: true
     ## @param auth.sentinel Enable password authentication on sentinels too
     ##
-    sentinel: false
+    sentinel: true
     ## @param auth.password Redis&reg; password
     ## Defaults to a random 10-character alphanumeric string if not set
     ##
